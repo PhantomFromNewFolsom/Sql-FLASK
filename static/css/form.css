@@ -1,0 +1,22 @@
+form.login_form {
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffe5b4;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+    max-width: 650px
+}
+
+.parent {
+  margin-top: 0;
+  margin: 1rem;
+  padding: 2rem 2rem;
+  max-height: 100px
+}
+
+.child {
+  display: inline-block;
+  padding: 1rem 1rem;
+  vertical-align: middle;
+}

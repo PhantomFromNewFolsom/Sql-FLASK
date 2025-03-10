@@ -7,59 +7,37 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
+def add_user(name, surname, age, position, speciality, address, email):
+    user = User()
+    user.name = name
+    user.surname = surname
+    user.age = age
+    user.position = position
+    user.speciality = speciality
+    user.address = address
+    user.email = email
+    db_sess = db_session.create_session()
+    db_sess.add(user)
+    db_sess.commit()
+
+
 def main():
     db_session.global_init("db/blogs.db")
     db_sess = db_session.create_session()
     for user in db_sess.query(User).all():
         print(user)
 
-    user = User()
-    user.name = "Scot"
-    user.surname = "Ridley"
-    user.age = 21
-    user.position = "captain"
-    user.speciality = "research engineer"
-    user.address = "module_1"
-    user.email = "scott_chief@mars.org"
-    db_sess = db_session.create_session()
-    db_sess.add(user)
-    db_sess.commit()
+    add_user("Scot", "Ridley", 21, "captain", "research engineer",
+             "module_1", "scott_chief@mars.org")
 
-    user = User()
-    user.name = "Alex"
-    user.surname = "Pushkin"
-    user.age = 19
-    user.position = "boatswain"
-    user.speciality = "ecobiolog"
-    user.address = "module_1"
-    user.email = "PushKing@mars.org"
-    db_sess = db_session.create_session()
-    db_sess.add(user)
-    db_sess.commit()
+    add_user("Alex", "Pushkin", 19, "boatswain", "ecobiolog",
+             "module_1", "PushKing@mars.org")
 
-    user = User()
-    user.name = "Adam"
-    user.surname = "Smitt"
-    user.age = 29
-    user.position = "chef"
-    user.speciality = "cook"
-    user.address = "module_1"
-    user.email = "galaktika@mars.org"
-    db_sess = db_session.create_session()
-    db_sess.add(user)
-    db_sess.commit()
+    add_user("Adam", "Smitt", 29, "chef", "cook",
+             "module_1", "galaktika@mars.org")
 
-    user = User()
-    user.name = "Yop"
-    user.surname = "Yan"
-    user.age = 21
-    user.position = "cabin boy"
-    user.speciality = "doctor"
-    user.address = "module_1"
-    user.email = "ThisIsHorosho@mars.org"
-    db_sess = db_session.create_session()
-    db_sess.add(user)
-    db_sess.commit()
+    add_user("Yop", "Yan", 21, "cabin boy", "doctor",
+             "module_1", "ThisIsHorosho@mars.org")
 
     job = Job()
     job.team_leader = 1

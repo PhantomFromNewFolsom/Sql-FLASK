@@ -7,6 +7,12 @@ from .db_session import SqlAlchemyBase
 class Job(SqlAlchemyBase):
     __tablename__ = 'jobs'
 
+    def __str__(self):
+        return f"<Job> {self.id}: {self.job} {self.user.name}"
+
+    def __repr__(self):
+        return self.__str__()
+
     id = sqlalchemy.Column(sqlalchemy.Integer,
                            primary_key=True, autoincrement=True)
     team_leader = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
