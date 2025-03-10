@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block hed %}
+<link rel="stylesheet" href="/static/css/table.css">
+{% endblock %}
+
+{% block content %}
+{% for job in list %}
+<h1>Job #{{job.id}}</h1>
+<table>
+    <thead>
+    <tr>
+        <td>Title of activity</td>
+        <td>team leader</td>
+        <td>Duration</td>
+        <td>List of collaborators</td>
+        <td>Is finished</td>
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>{{job.job}}</td>
+            <td>{{job.team_leader}}</td>
+            <td>{{job.work_size}}</td>
+            <td>{{job.collaborators}}</td>
+            {% if job.is_finished %}
+            <td class="finished">Is finished</td>
+            {% else %}
+            <td class="not_finished">Is not finished</td>
+            {% endif %}
+        </tr>
+    </tbody>
+</table>
+{% endfor %}
+{% endblock %}
