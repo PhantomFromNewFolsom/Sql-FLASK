@@ -1,31 +1,34 @@
-from flask import Flask, render_template, request, redirect
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, IntegerField, SubmitField, EmailField
-from wtforms.validators import DataRequired
-
+from flask import Flask, render_template, redirect
+from data import db_session
 from data.db_session import global_init, create_session
 from data.jobs import Job
-from main import add_user
+from data.users import User
 
+from flask_login import LoginManager, login_user, logout_user, login_required
 
-class LoginForm(FlaskForm):
-    login = StringField('Login', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    second_password = PasswordField('Repeat password', validators=[DataRequired()])
-    surname = StringField('Surname', validators=[DataRequired()])
-    name = StringField('Name', validators=[DataRequired()])
-    age = IntegerField('Age', validators=[DataRequired()])
-    position = StringField('Position', validators=[DataRequired()])
-    speciality = StringField('Speciality', validators=[DataRequired()])
-    address = StringField('Address', validators=[DataRequired()])
-    email = EmailField('Email', validators=[DataRequired()])
-    submit = SubmitField('Submit')
-
+from forms.add_job import JobForm
+from forms.login import LoginForm
+from forms.reg import RegisterForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 global_init(f'db/blogs.db')
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    db_sess = db_session.create_session()
+    return db_sess.query(User).get(user_id)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 @app.route('/table')
@@ -42,14 +45,81 @@ def success():
     return '''<h1>Успех!</h1>'''
 
 
+@app.route('/register', methods=['GET', 'POST'])
+def reqister():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        if form.password.data != form.second_password.data:
+            return render_template('form.html', title='Регистрация',
+                                   form=form,
+                                   message="Пароли не совпадают")
+        db_sess = db_session.create_session()
+        if db_sess.query(User).filter(User.email == form.email.data).first():
+            return render_template('form.html', title='Регистрация',
+                                   form=form,
+                                   message="Такой пользователь уже есть")
+        user = User(
+            name=form.name.data,
+            surname=form.surname.data,
+            age=form.age.data,
+            position=form.position.data,
+            speciality=form.speciality.data,
+            address=form.address.data,
+            email=form.email.data,
+        )
+        user.set_password(form.password.data)
+        db_sess.add(user)
+        db_sess.commit()
+        login_user(user)
+        return redirect('/')
+    return render_template('form.html', title='Регистрация', form=form)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        add_user(request.form['name'], request.form['surname'], int(request.form['age']), request.form['position'],
-                 request.form['speciality'], request.form['address'], request.form['email'])
-        return redirect('/success')
-    return render_template('form.html', title='Авторизация', form=form)
+        db_sess = db_session.create_session()
+        user = db_sess.query(User).filter(User.email == form.email.data).first()
+        if user and user.check_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            return redirect("/")
+        return render_template('login.html',
+                               message="Неправильный логин или пароль",
+                               form=form)
+    return render_template('login.html', title='Авторизация', form=form)
+
+
+@app.route('/add_job', methods=['GET', 'POST'])
+@login_required
+def add_job():
+    form = JobForm()
+    print(form.validate_on_submit())
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        job = Job(
+            team_leader=form.team_leader.data,
+            job=form.job.data,
+            work_size=form.work_size.data,
+            collaborators=form.collaborators.data,
+            start_date=form.start_date.data,
+            end_date=form.end_date.data,
+            is_finished=form.is_finished.data
+        )
+        db_sess.add(job)
+        db_sess.commit()
+        return redirect('/')
+    return render_template('add_job.html', form=form)
+
+
+@app.route('/index')
+@app.route('/')
+def index():
+    db_sess = create_session()
+    lst = []
+    for job in db_sess.query(Job).all():
+        lst.append(job)
+    return render_template('home.html', title='Милый дом', list=lst)
 
 
 if __name__ == '__main__':

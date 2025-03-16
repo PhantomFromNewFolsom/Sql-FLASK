@@ -2,10 +2,11 @@
 
 {% block hed %}
 <link rel="stylesheet" href="/static/css/form.css">
+<link rel="stylesheet" href="/static/css/table.css">
 {% endblock %}
 
 {% block content %}
-<h1>Авторизация</h1>
+<h1>Регистрация</h1>
 <form class="login_form" action="" method="post" novalidate>
     {{ form.hidden_tag() }}
     {{ form.login.label }}<br>
@@ -98,6 +99,7 @@
         {{ error }}
     </div>
     {% endfor %}
-    <p>{{ form.submit(type="submit", class="btn btn-primary") }}</p>
+    <p>{{ form.submit(type="submit", class="btn btn-info") }}</p>
+    {{ message }}
 </form>
 {% endblock %}
