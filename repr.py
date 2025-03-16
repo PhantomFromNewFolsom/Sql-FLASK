@@ -1,12 +1,14 @@
 from flask import Flask, render_template, redirect
 from data import db_session
 from data.db_session import global_init, create_session
+from data.departments import Department
 from data.jobs import Job
 from data.users import User
 
 from flask_login import LoginManager, login_user, logout_user, login_required
 
 from forms.add_job import JobForm
+from forms.department import DepartmentForm
 from forms.login import LoginForm
 from forms.reg import RegisterForm
 
@@ -108,7 +110,7 @@ def add_job():
         db_sess.add(job)
         db_sess.commit()
         return redirect('/')
-    return render_template('add_job.html', form=form)
+    return render_template('add_job.html', title='Добавление работы', form=form)
 
 
 @app.route('/edit_job/<job_id>', methods=['GET', 'POST'])
@@ -141,12 +143,17 @@ def edit_job(job_id):
     form.end_date.data = job.end_date
     form.is_finished.data = job.is_finished
 
-    return render_template('add_job.html', form=form)
+    return render_template('add_job.html', title='Редактирование работы', form=form)
 
 
 @app.route('/confirm/<job_id>')
 def confirm(job_id):
-    return render_template('confirmation.html', id=job_id)
+    return render_template('confirmation.html', title='Уверен?', id=job_id)
+
+
+@app.route('/confirm_dep/<department_id>')
+def confirm_dep(department_id):
+    return render_template('confirmation_dep.html', title='Уверен?', id=department_id)
 
 
 @app.route('/delete_job/<job_id>')
@@ -157,6 +164,78 @@ def delete_job(job_id):
         db_sess.delete(job)
         db_sess.commit()
         return redirect('/')
+    else:
+        return 404
+
+
+@app.route('/department_list')
+def department_list():
+    db_sess = create_session()
+    lst = []
+    for department in db_sess.query(Department).all():
+        lst.append(department)
+    return render_template('department_list.html', title='Список департаментов', list=lst)
+
+
+@app.route('/add_department', methods=['GET', 'POST'])
+def add_department():
+    form = DepartmentForm()
+
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        if db_sess.query(Department).filter(Department.email == form.email.data).first():
+            return render_template('edit_department.html',
+                                   title='Редактирование департамента', form=form,
+                                   message="Департамент с таким email уже есть")
+        department = Department()
+
+        department.title = form.title.data
+        department.chief = form.chief.data
+        department.members = form.members.data
+        department.email = form.email.data
+
+        db_sess.add(department)
+        db_sess.commit()
+        return redirect('/department_list')
+
+    return render_template('edit_department.html', title='Добавление департамента', form=form)
+
+
+@app.route('/edit_department/<department_id>', methods=['GET', 'POST'])
+def edit_department(department_id):
+    form = DepartmentForm()
+
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        department = db_sess.query(Department).filter(Department.id == department_id).first()
+
+        department.title = form.title.data
+        department.chief = form.chief.data
+        department.members = form.members.data
+        department.email = form.email.data
+
+        db_sess.commit()
+        return redirect('/department_list')
+
+    db_sess = db_session.create_session()
+    department = db_sess.query(Department).filter(Department.id == department_id).first()
+
+    form.title.data = department.title
+    form.chief.data = department.chief
+    form.members.data = department.members
+    form.email.data = department.email
+
+    return render_template('edit_department.html', title='Редактирование департамента', form=form)
+
+
+@app.route('/delete_department/<department_id>')
+def delete_department(department_id):
+    db_sess = db_session.create_session()
+    department = db_sess.query(Department).filter(Department.id == department_id).first()
+    if department:
+        db_sess.delete(department)
+        db_sess.commit()
+        return redirect('/department_list')
     else:
         return 404
 

@@ -13,7 +13,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="/">Home</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="/logout">Выйти из аккаунта</a>
@@ -25,7 +25,7 @@
             <a class="nav-link" href="/add_department">Добавление департамента</a>
         </li>
       <li class="nav-item">
-            <a class="nav-link" href="/department_list">Список департаментов</a>
+            <a class="nav-link" href="/department_list">Список департаментов <span class="sr-only">(current)</span></a>
         </li>
     </ul>
   </div>
@@ -34,41 +34,33 @@
 {% endblock %}
 
 {% block content %}
-{% for job in list %}
-<h1>Job #{{job.id}}</h1>
+{% for department in list %}
+<h1>Department #{{department.id}}</h1>
 <table>
     <thead>
     <tr>
-        <td>Title of activity</td>
-        <td>team leader</td>
-        <td>Duration</td>
-        <td>List of collaborators</td>
-        <td>Is finished</td>
+        <td>Title of department</td>
+        <td>Chief</td>
+        <td>Members</td>
+        <td>Department Email</td>
     </tr>
     </thead>
     <tbody>
         <tr>
-            <td>{{job.job}}</td>
-            <td>{{job.team_leader}}</td>
-            <td>{{job.work_size}}</td>
-            <td>{{job.collaborators}}</td>
-            {% if job.is_finished %}
-            <td class="finished">Is finished</td>
-            {% else %}
-            <td class="not_finished">Is not finished</td>
-            {% endif %}
+            <td>{{department.title}}</td>
+            <td>{{department.chief}}</td>
+            <td>{{department.members}}</td>
+            <td>{{department.email}}</td>
         </tr>
     </tbody>
 </table>
-{% if current_user.id == job.team_leader or current_user.id == 16 %}
 <div class="parent">
         <div class="child">
-            <a class="btn btn-warning" href="/edit_job/{{ job.id }}">Edit</a>
+            <a class="btn btn-warning" href="/edit_department/{{ department.id }}">Edit</a>
         </div>
         <div class="child">
-            <a class="btn btn-danger" href="/confirm/{{ job.id }}">Delete</a>
+            <a class="btn btn-danger" href="/confirm_dep/{{ department.id }}">Delete</a>
         </div>
 </div>
-{% endif %}
 {% endfor %}
 {% endblock %}
