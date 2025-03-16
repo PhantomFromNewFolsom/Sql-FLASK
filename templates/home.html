@@ -54,5 +54,15 @@
         </tr>
     </tbody>
 </table>
+{% if current_user.id == job.team_leader or current_user.id == 16 %}
+<div class="parent">
+        <div class="child">
+            <a class="btn btn-warning" href="/edit_job/{{ job.id }}">Edit</a>
+        </div>
+        <div class="child">
+            <a class="btn btn-danger" href="/confirm/{{ job.id }}">Delete</a>
+        </div>
+</div>
+{% endif %}
 {% endfor %}
 {% endblock %}

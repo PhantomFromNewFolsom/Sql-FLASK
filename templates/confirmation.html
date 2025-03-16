@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block hed %}
+<link rel="stylesheet" href="/static/css/form.css">
+<link rel="stylesheet" href="/static/css/table.css">
+{% endblock %}
+
+{% block content %}
+<h1>Вы уверены?</h1>
+<div class="parent">
+        <div class="child">
+            <a class="btn btn-danger" href="/delete_job/{{ id }}">Да</a>
+        </div>
+        <div class="child">
+            <a class="btn btn-success" href="/">Нет</a>
+        </div>
+</div>
+{% endblock %}

@@ -94,7 +94,6 @@ def login():
 @login_required
 def add_job():
     form = JobForm()
-    print(form.validate_on_submit())
     if form.validate_on_submit():
         db_sess = db_session.create_session()
         job = Job(
@@ -110,6 +109,56 @@ def add_job():
         db_sess.commit()
         return redirect('/')
     return render_template('add_job.html', form=form)
+
+
+@app.route('/edit_job/<job_id>', methods=['GET', 'POST'])
+def edit_job(job_id):
+    form = JobForm()
+
+    if form.validate_on_submit():
+        db_sess = db_session.create_session()
+        job = db_sess.query(Job).filter(Job.id == job_id).first()
+
+        job.team_leader = form.team_leader.data
+        job.job = form.job.data
+        job.work_size = form.work_size.data
+        job.collaborators = form.collaborators.data
+        job.start_date = form.start_date.data
+        job.end_date = form.end_date.data
+        job.is_finished = form.is_finished.data
+
+        db_sess.commit()
+        return redirect('/')
+
+    db_sess = db_session.create_session()
+    job = db_sess.query(Job).filter(Job.id == int(job_id)).first()
+
+    form.team_leader.data = job.team_leader
+    form.job.data = job.job
+    form.work_size.data = job.work_size
+    form.collaborators.data = job.collaborators
+    form.start_date.data = job.start_date
+    form.end_date.data = job.end_date
+    form.is_finished.data = job.is_finished
+
+    return render_template('add_job.html', form=form)
+
+
+@app.route('/confirm/<job_id>')
+def confirm(job_id):
+    return render_template('confirmation.html', id=job_id)
+
+
+@app.route('/delete_job/<job_id>')
+def delete_job(job_id):
+    db_sess = db_session.create_session()
+    job = db_sess.query(Job).filter(Job.id == job_id).first()
+    if job:
+        db_sess.delete(job)
+        db_sess.commit()
+        return redirect('/')
+    else:
+        return 404
 
 
 @app.route('/index')
