@@ -1,5 +1,4 @@
 from flask import Flask, render_template, redirect
-from data import db_session
 from data.db_session import global_init, create_session
 from data.departments import Department
 from data.jobs import Job
@@ -11,6 +10,8 @@ from forms.add_job import JobForm
 from forms.department import DepartmentForm
 from forms.login import LoginForm
 from forms.reg import RegisterForm
+
+from data import db_session, jobs_api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -250,5 +251,11 @@ def index():
     return render_template('home.html', title='Милый дом', list=lst)
 
 
-if __name__ == '__main__':
+def main():
+    db_session.global_init("db/blogs.db")
+    app.register_blueprint(jobs_api.blueprint)
     app.run(port=8080, host='127.0.0.1', debug=True)
+
+
+if __name__ == '__main__':
+    main()
