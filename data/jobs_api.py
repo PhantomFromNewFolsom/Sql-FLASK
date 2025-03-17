@@ -25,7 +25,7 @@ def get_jobs():
     )
 
 
-@blueprint.route('/api/news/<int:news_id>', methods=['GET'])
+@blueprint.route('/api/jobs/<int:news_id>', methods=['GET'])
 def get_one_news(news_id):
     db_sess = db_session.create_session()
     jobs = db_sess.query(Job).get(news_id)
@@ -33,6 +33,7 @@ def get_one_news(news_id):
         return make_response(jsonify({'error': 'Not found'}), 404)
     return jsonify(
         {
-            'jobs': jobs.to_dict()
+            'jobs': jobs.to_dict(only=('id', 'user.name', 'user.surname', 'job', 'work_size',
+                                       'start_date', 'end_date', 'is_finished'))
         }
     )
