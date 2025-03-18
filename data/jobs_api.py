@@ -25,10 +25,14 @@ def get_jobs():
     )
 
 
-@blueprint.route('/api/jobs/<int:news_id>', methods=['GET'])
-def get_one_news(news_id):
+@blueprint.route('/api/jobs/<jobs_id>', methods=['GET'])
+def get_one_jobs(jobs_id):
     db_sess = db_session.create_session()
-    jobs = db_sess.query(Job).get(news_id)
+    print(type(jobs_id) is not int, type(jobs_id))
+    print(jobs_id)
+    if type(jobs_id) is not int:
+        return make_response(jsonify({'error': 'Bad request'}), 400)
+    jobs = db_sess.query(Job).get(jobs_id)
     if not jobs:
         return make_response(jsonify({'error': 'Not found'}), 404)
     return jsonify(
