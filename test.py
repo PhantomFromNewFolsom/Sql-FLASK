@@ -30,7 +30,14 @@ print(post('http://localhost:8080/api/jobs',
 #  проверяем, добавилась ли работа
 pprint(get('http://localhost:8080/api/jobs').json())
 
-print(delete('http://localhost:8080/api/jobs/999').json())
 # работы с id = 999 нет в базе
+print(delete('http://localhost:8080/api/jobs/999').json())
 
-print(delete('http://localhost:8080/api/jobs/9').json())
+#  вместо id отправляем строку
+print(delete('http://localhost:8080/api/jobs/bold').json())
+
+#  корректный запрос
+print(delete('http://localhost:8080/api/jobs/10').json())
+
+#  проверяем, удалилась ли работа
+pprint(get('http://localhost:8080/api/jobs').json())

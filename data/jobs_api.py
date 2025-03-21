@@ -71,10 +71,13 @@ def create_jobs():
     return jsonify({'id': jobs.id})
 
 
-@blueprint.route('/api/jobs/<int:jobs_id>', methods=['DELETE'])
+@blueprint.route('/api/jobs/<jobs_id>', methods=['DELETE'])
 def delete_news(jobs_id):
     db_sess = db_session.create_session()
-
+    try:
+        jobs_id = int(jobs_id)
+    except Exception:
+        return make_response(jsonify({'error': 'Bad request'}), 404)
     jobs = db_sess.query(Job).get(jobs_id)
     if not jobs:
         return make_response(jsonify({'error': 'Not found'}), 404)
