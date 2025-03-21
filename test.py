@@ -42,6 +42,15 @@ print(delete('http://localhost:8080/api/jobs/10').json())
 #  проверяем, удалилась ли работа
 pprint(get('http://localhost:8080/api/jobs').json())
 
+#  отправляем пустой запрос
+print(put('http://localhost:8080/api/jobs/9', json={}).json())
+
+#  отправляем неполный запрос
+print(put('http://localhost:8080/api/jobs/9', json={'team_leader': 1}).json())
+
+#  отправляем строку в качестве id
+print(put('http://localhost:8080/api/jobs/BlaBlaBla', json={'team_leader': 1}).json())
+
 print(put('http://localhost:8080/api/jobs/9', json={'team_leader': 1,
                                                     'job': 'Отрабатывание барщины',
                                                     'work_size': 100,
@@ -49,3 +58,6 @@ print(put('http://localhost:8080/api/jobs/9', json={'team_leader': 1,
                                                     'start_date': [2025, 3, 21],
                                                     'end_date': [2025, 3, 21],
                                                     'is_finished': True}).json())
+
+#  проверяем, изменилась ли работа
+pprint(get('http://localhost:8080/api/jobs').json())
