@@ -1,8 +1,9 @@
-from requests import get, post
+from requests import get, post, delete
+from pprint import pprint
 
-print(get('http://localhost:8080/api/jobs').json())
+pprint(get('http://localhost:8080/api/jobs').json())
 
-print(get('http://localhost:8080/api/jobs/2').json())
+pprint(get('http://localhost:8080/api/jobs/2').json())
 
 #  работы с таким id не существует
 print(get('http://localhost:8080/api/jobs/20234234903490').json())
@@ -27,4 +28,9 @@ print(post('http://localhost:8080/api/jobs',
                  'is_finished': False}).json())
 
 #  проверяем, добавилась ли работа
-print(get('http://localhost:8080/api/jobs').json())
+pprint(get('http://localhost:8080/api/jobs').json())
+
+print(delete('http://localhost:8080/api/jobs/999').json())
+# работы с id = 999 нет в базе
+
+print(delete('http://localhost:8080/api/jobs/9').json())
