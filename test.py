@@ -1,4 +1,4 @@
-from requests import get, post, delete
+from requests import get, post, delete, put
 from pprint import pprint
 
 pprint(get('http://localhost:8080/api/jobs').json())
@@ -41,3 +41,11 @@ print(delete('http://localhost:8080/api/jobs/10').json())
 
 #  проверяем, удалилась ли работа
 pprint(get('http://localhost:8080/api/jobs').json())
+
+print(put('http://localhost:8080/api/jobs/9', json={'team_leader': 1,
+                                                    'job': 'Отрабатывание барщины',
+                                                    'work_size': 100,
+                                                    'collaborators': '3, 4, 5, 6, 7 , 8',
+                                                    'start_date': [2025, 3, 21],
+                                                    'end_date': [2025, 3, 21],
+                                                    'is_finished': True}).json())
