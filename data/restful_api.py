@@ -15,7 +15,7 @@ class UsersResource(Resource):
         abort_if_user_not_found(user_id)
         session = db_session.create_session()
         user = session.query(User).get(user_id)
-        return jsonify({'news': user.to_dict(
+        return jsonify({'user': user.to_dict(
             only=('id', 'surname', 'name', 'age', 'position',
                   'speciality', 'address', 'email'))})
 
@@ -54,6 +54,10 @@ class UsersListResource(Resource):
 
 
 def abort_if_user_not_found(user_id):
+    try:
+        user_id = int(user_id)
+    except Exception:
+        abort(400, message=f"Value Error: User id is not int")
     session = db_session.create_session()
     user = session.query(User).get(user_id)
     if not user:

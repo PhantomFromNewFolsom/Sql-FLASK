@@ -262,7 +262,7 @@ def main():
     api.add_resource(restful_api.UsersListResource, '/api/v2/users')
 
     # для одного объекта
-    api.add_resource(restful_api.UsersResource, '/api/v2/users/<int:user_id>')
+    api.add_resource(restful_api.UsersResource, '/api/v2/users/<user_id>')
     app.run(port=8080, host='127.0.0.1', debug=True)
 
 
