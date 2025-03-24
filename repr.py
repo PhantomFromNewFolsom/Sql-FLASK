@@ -1,4 +1,6 @@
 from flask import Flask, render_template, redirect
+from flask_restful import Api
+
 from data.db_session import global_init, create_session
 from data.departments import Department
 from data.jobs import Job
@@ -11,12 +13,13 @@ from forms.department import DepartmentForm
 from forms.login import LoginForm
 from forms.reg import RegisterForm
 
-from data import db_session, jobs_api, users_api
+from data import db_session, users_api, restful_api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 login_manager = LoginManager()
 login_manager.init_app(app)
+api = Api(app)
 
 global_init(f'db/blogs.db')
 
@@ -254,6 +257,12 @@ def index():
 def main():
     db_session.global_init("db/blogs.db")
     app.register_blueprint(users_api.blueprint)
+
+    # для списка объектов
+    api.add_resource(restful_api.UsersListResource, '/api/v2/users')
+
+    # для одного объекта
+    api.add_resource(restful_api.UsersResource, '/api/v2/users/<int:user_id>')
     app.run(port=8080, host='127.0.0.1', debug=True)
 
 
