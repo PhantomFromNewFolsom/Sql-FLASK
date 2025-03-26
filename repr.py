@@ -13,7 +13,7 @@ from forms.department import DepartmentForm
 from forms.login import LoginForm
 from forms.reg import RegisterForm
 
-from data import db_session, users_api, restful_api
+from data import db_session, users_api, restful_api, restful_job_api
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -263,6 +263,12 @@ def main():
 
     # для одного объекта
     api.add_resource(restful_api.UsersResource, '/api/v2/users/<user_id>')
+
+    # для списка объектов
+    api.add_resource(restful_job_api.JobsListResource, '/api/v2/jobs')
+
+    # для одного объекта
+    api.add_resource(restful_job_api.JobsResource, '/api/v2/jobs/<job_id>')
     app.run(port=8080, host='127.0.0.1', debug=True)
 
 
