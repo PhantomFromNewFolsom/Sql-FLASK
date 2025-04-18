@@ -25,3 +25,6 @@ class Job(SqlAlchemyBase, SerializerMixin):
     end_date = sqlalchemy.Column(sqlalchemy.DateTime)
     is_finished = sqlalchemy.Column(sqlalchemy.Boolean, default=False)
     user = orm.relationship('User')
+    department = orm.relationship("Department",
+                                  secondary="association",
+                                  backref="jobs")

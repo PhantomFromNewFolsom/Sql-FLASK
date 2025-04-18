@@ -43,6 +43,7 @@
         <td>team leader</td>
         <td>Duration</td>
         <td>List of collaborators</td>
+        <td>Department</td>
         <td>Is finished</td>
     </tr>
     </thead>
@@ -52,6 +53,7 @@
             <td>{{job.team_leader}}</td>
             <td>{{job.work_size}}</td>
             <td>{{job.collaborators}}</td>
+            <td>{{job.department[0]}}</td>
             {% if job.is_finished %}
             <td class="finished">Is finished</td>
             {% else %}

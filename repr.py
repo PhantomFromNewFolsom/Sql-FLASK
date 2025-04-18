@@ -269,7 +269,7 @@ def main():
 
     # для одного объекта
     api.add_resource(restful_job_api.JobsResource, '/api/v2/jobs/<job_id>')
-    app.run(port=8080, host='127.0.0.1', debug=True)
+    app.run(port=8081, host='127.0.0.1', debug=True)
 
 
 if __name__ == '__main__':
