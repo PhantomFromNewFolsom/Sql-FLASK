@@ -14,6 +14,7 @@ from forms.login import LoginForm
 from forms.reg import RegisterForm
 
 from data import db_session, users_api, restful_api, restful_job_api
+from yandex_maps import search, get_image
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
@@ -240,6 +241,19 @@ def delete_department(department_id):
         db_sess.delete(department)
         db_sess.commit()
         return redirect('/department_list')
+    else:
+        return 404
+
+
+@app.route('/users_show/<int:user_id>')
+def users_show(user_id):
+    db_sess = db_session.create_session()
+    user = db_sess.query(User).filter(User.id == user_id).first()
+    if user:
+        get_image(*search(user.city_from))
+        return render_template('users_show.html',
+                               title=f'{user.surname} {user.name}: {user.city_from}', img='../static/images/map.png',
+                               user=f'{user.name} {user.surname}', city_from=user.city_from)
     else:
         return 404
 

@@ -19,7 +19,7 @@ def get_users():
         {
             'users':
                 [item.to_dict(only=('id', 'surname', 'name', 'age', 'position',
-                                    'speciality', 'address', 'email'))
+                                    'speciality', 'address', 'email', 'city_from'))
                  for item in users]
         }
     )

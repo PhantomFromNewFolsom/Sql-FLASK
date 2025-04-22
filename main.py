@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
-def add_user(name, surname, age, position, speciality, address, email, password):
+def add_user(name, surname, age, position, speciality, address, email, password, city_from):
     user = User()
     user.name = name
     user.surname = surname
@@ -18,6 +18,7 @@ def add_user(name, surname, age, position, speciality, address, email, password)
     user.address = address
     user.email = email
     user.set_password(password)
+    user.city_from = city_from
     db_sess = db_session.create_session()
     db_sess.add(user)
     db_sess.commit()
@@ -30,19 +31,19 @@ def main():
         print(user)
 
     add_user("Scot", "Ridley", 21, "captain", "research engineer",
-             "module_1", "scott_chief@mars.org", '1')
+             "module_1", "scott_chief@mars.org", '1', 'Челябинск')
 
     add_user("Alex", "Pushkin", 19, "boatswain", "ecobiolog",
-             "module_1", "PushKing@mars.org", '2')
+             "module_1", "PushKing@mars.org", '2', 'Москва')
 
     add_user("Pro", "Gamer", 14, "boatswain", "ecobiolog",
-             "module_2", "Gosswrtiter@mars.org", '3')
+             "module_2", "Gosswrtiter@mars.org", '3', 'Санкт-Петербург')
 
     add_user("Adam", "Smitt", 29, "chef", "cook",
-             "module_1", "galaktika@mars.org", '4')
+             "module_1", "galaktika@mars.org", '4', 'Новосибирск')
 
     add_user("Yop", "Yan", 21, "cabin boy", "doctor",
-             "module_1", "ThisIsHorosho@mars.org", '5')
+             "module_1", "ThisIsHorosho@mars.org", '5', 'Казань')
 
     job = Job()
     job.team_leader = 1
